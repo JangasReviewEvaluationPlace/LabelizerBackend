@@ -1,6 +1,6 @@
 from typing import List
 from .database import Postgres
-from .models import Source, Tag
+from .models import Source, Tag, Query, TextData
 
 
 class TextDataManager:
@@ -31,7 +31,7 @@ class TagManager:
         return Tag(**dict(zip(fields, result)))
 
     @classmethod
-    def get_last_entry(cls):
+    def get_last_entry(cls) -> Tag:
         fields = ("id", "title", )
         statement = f"""
             SELECT {",".join(fields)} FROM tag
@@ -67,3 +67,68 @@ class TagManager:
         with Postgres() as db:
             db.cur.execute(statement, (title, ))
         return cls.get_last_entry()
+
+
+class QueryManager:
+    @classmethod
+    def get_last_entry(cls) -> Query:
+        fields = ("id", "query", )
+        statement = f"""
+            SELECT {",".join(fields)} FROM tag
+            WHERE id=(SELECT MAX(id) FROM tag);
+        """
+        with Postgres() as db:
+            db.cur.execute(statement)
+            result = db.cur.fetchone()
+        return Tag(**dict(zip(fields, result)))
+
+    @classmethod
+    def get_by_query(cls, query: str) -> Query:
+        fields = ("id", "query", )
+        statement = f"""
+            SELECT {",".join(fields)} FROM tag
+            WHERE query=%s;
+        """
+        with Postgres() as db:
+            db.cur.execute(statement, (query, ))
+            result = db.cur.fetchone()
+        if not result:
+            return None
+        return Tag(**dict(zip(fields, result)))
+
+    @classmethod
+    def create(cls, query) -> Query:
+        statement = "INSERT INTO query (query) VALUES (%s);"
+        with Postgres() as db:
+            db.cur.execute(statement, (query, ))
+        return cls.get_last_entry()
+
+    @classmethod
+    def get_or_create(cls, query) -> Query:
+        query = cls.get_by_query(query=query)
+        if query:
+            return query
+        return cls.create(query=query)
+
+
+class LabelManager:
+    @classmethod
+    def get_next(cls, sources, tags) -> TextData:
+        fields = ("source", "id", "content", "created_at", "intention", )
+        source_query_string = '({})'.format(",".join([f"'{source}'" for source in sources]))
+        tag_query_string = f'({",".join(tags)})'
+        statement = f"""
+            SELECT {",".join(fields)} FROM text_data
+            WHERE source IN {source_query_string}
+            AND id NOT IN (
+                SELECT id FROM label
+                WHERE source IN {source_query_string} AND tag IN {tag_query_string}
+            )
+            LIMIT 1;
+        """
+        with Postgres() as db:
+            db.cur.execute(statement)
+            result = db.cur.fetchone()
+        if not result:
+            return None
+        return TextData(**dict(zip(fields, result)))

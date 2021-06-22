@@ -15,3 +15,9 @@ tag_marshalling = api.model("Tag", {
 tag_create_marshalling = api.model("Tag", {
     "title": fields.String(required=True)
 })
+
+label_marshalling = api.model("Label", {
+    "source": fields.String(),
+    "id": fields.String(),
+    "content": fields.String()
+})

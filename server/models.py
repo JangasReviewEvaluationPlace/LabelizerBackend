@@ -30,7 +30,7 @@ class Query:
 
 
 @dataclass
-class Labels:
+class Label:
     tag: Tag
     text_data: TextData
     timestamp: datetime
