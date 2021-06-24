@@ -12,6 +12,8 @@ POSTGRES_CONFIGS = {
     "port": os.getenv("POSTGRES_PORT"),
 }
 
+SALTED_PASSWORD_LENGTH = int(os.getenv("SALTED_PASSWORD_LENGTH", 20))
+
 api = Api(
     version="0.1",
     title="Labelizer",

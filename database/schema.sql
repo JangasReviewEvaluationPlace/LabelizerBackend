@@ -36,3 +36,16 @@ CREATE TABLE IF NOT EXISTS already_labeled (
     FOREIGN KEY (query) REFERENCES query(id),
     PRIMARY KEY (query, source, id)
 );
+
+CREATE TABLE IF NOT EXISTS auth_user (
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(120) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS token (
+    key VARCHAR(40) PRIMARY KEY,
+    auth_user BIGINT NOT NULL UNIQUE,
+    FOREIGN KEY (auth_user) REFERENCES auth_user(id),
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

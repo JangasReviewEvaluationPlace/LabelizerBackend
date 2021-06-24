@@ -1,7 +1,7 @@
 from flask import Flask, Blueprint
 from flask_cors import CORS
 
-from .configs import BaseConfigs, api
+from conf.configs import BaseConfigs, api
 
 
 def create_app(config: BaseConfigs = BaseConfigs) -> Flask:
@@ -23,8 +23,10 @@ def init_lazily(blueprint: Blueprint) -> None:
 
 def init_routes() -> None:
     """Init Routes by using namespaces."""
-    from .views import namespace
-    api.add_namespace(namespace)
+    from labelizer.views import namespace as labelizer
+    from auth.views import namespace as auth
+    api.add_namespace(labelizer)
+    api.add_namespace(auth)
 
 
 if __name__ == "__main__":

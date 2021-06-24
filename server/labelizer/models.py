@@ -18,6 +18,12 @@ class Source:
 
 
 @dataclass
+class Intention:
+    id: str
+    title: str
+
+
+@dataclass
 class Tag:
     id: int
     title: str
@@ -41,3 +47,10 @@ class AlreadyLabeled:
     query: Query
     text_data: TextData
     timestamp: datetime
+
+
+@dataclass
+class Statistics:
+    text_data: int
+    already_labeled: int
+    matches: int
