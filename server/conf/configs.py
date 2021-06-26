@@ -10,6 +10,7 @@ POSTGRES_CONFIGS = {
     "host": os.getenv("POSTGRES_HOST"),
     "database": os.getenv("POSTGRES_DATABASE"),
     "port": os.getenv("POSTGRES_PORT"),
+    "sslmode": "require"
 }
 
 SALTED_PASSWORD_LENGTH = int(os.getenv("SALTED_PASSWORD_LENGTH", 20))

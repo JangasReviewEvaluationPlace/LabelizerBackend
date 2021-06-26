@@ -166,7 +166,9 @@ class LabelManager:
     def get_next(cls, sources: List[str], intentions: List[str], query: Query) -> TextData:
         fields = ("source", "id", "content", "created_at", "intention", )
         source_query_string = '({})'.format(",".join([f"'{source}'" for source in sources]))
-        intention_query_string = '({})'.format(",".join([f"'{intention}'" for intention in intentions]))
+        intention_query_string = '({})'.format(
+            ",".join([f"'{intention}'" for intention in intentions])
+        )
         statement = f"""
             SELECT {",".join(fields)} FROM text_data
             WHERE source IN {source_query_string} AND intention IN {intention_query_string}

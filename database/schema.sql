@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS text_data (
     content TEXT,
     intention TEXT,
     created_at TIMESTAMP,
+    timestamp TIMESTAMP CURRENT_TIMESTAMP,
     PRIMARY KEY (source, id)
 );
 
