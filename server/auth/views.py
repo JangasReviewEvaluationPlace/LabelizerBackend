@@ -8,7 +8,7 @@ from .marshalling import auth_user_marshalling, auth_user_response_marshalling
 namespace = api.namespace("/auth")
 
 
-@namespace.route("/registration")
+# @namespace.route("/registration")
 class RegistrationAPI(Resource):
     @namespace.marshal_with(auth_user_response_marshalling, code=201)
     @namespace.expect(auth_user_marshalling)
