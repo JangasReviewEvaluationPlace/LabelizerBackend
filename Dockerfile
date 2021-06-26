@@ -20,7 +20,8 @@ COPY poetry.lock poetry.lock
 COPY pyproject.toml pyproject.toml
 
 RUN poetry install
+RUN poetry add gunicorn
 
 WORKDIR /server
 
-CMD ["poetry", "run", "flask", "run"]
+CMD ["poetry", "run", "python", "app.py"]
